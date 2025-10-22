@@ -1,0 +1,6 @@
+// assi2/frontend/app/page.tsx
+import { redirect } from 'next/navigation';
+
+export default function Home() {
+  redirect('/tabs');
+}

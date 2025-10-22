@@ -1,0 +1,46 @@
+/* //app/globals.css */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Light Mode */
+.theme-light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Dark Mode */
+.theme-dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.theme-dark .navbar {
+  background-color: #222 !important;
+}
+
+/* Solarized Mode 🌅 */
+.theme-solarized {
+  background-color: #fdf6e3; /* cream */
+  color: #586e75; /* cool gray */
+}
+
+.theme-solarized .navbar {
+  background-color: #eee8d5 !important;
+}
+
+.theme-solarized a {
+  color: #268bd2; /* solarized blue */
+}
+
+.hover-pan:hover {
+  transform: scale(1.1);
+  cursor: grab;
+}
