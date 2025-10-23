@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Question } from './types';
 
-const APIURL = 'http://ec2-54-159-91-95.compute-1.amazonaws.com:4080';
+const APIURL = 'http://ec2-52-23-231-99.compute-1.amazonaws.com:4080';
 
 interface Props {
     onRefresh?: () => void;
