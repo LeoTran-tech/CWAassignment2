@@ -34,6 +34,7 @@ Question.init(
         question: {
             type: DataTypes.TEXT,
             allowNull: false,
+            unique: true,
         },
         hint: {
             type: DataTypes.TEXT,
@@ -42,6 +43,15 @@ Question.init(
         answer: {
             type: DataTypes.TEXT,
             allowNull: false,
+        },
+        // 👇 Add these two fields for TS type checking
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
         },
     },
     {

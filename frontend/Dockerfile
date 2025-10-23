@@ -1,4 +1,4 @@
-# assi2/frontend/Dockerfile
+# Dockerfile for frontend
 FROM node:lts
 
 WORKDIR /app

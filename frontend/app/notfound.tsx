@@ -1,4 +1,4 @@
-// app/not-found.tsx
+// assi2/frontend/app/notfound.tsx
 'use client';
 import Link from 'next/link';
 

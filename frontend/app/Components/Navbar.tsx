@@ -15,15 +15,15 @@ export default function Navbar() {
     theme === 'light'
       ? 'text-dark'
       : theme === 'dark'
-      ? 'text-light'
-      : 'text-secondary';
+        ? 'text-light'
+        : 'text-secondary';
 
   return (
     <nav className="navbar navbar-light bg-light border-bottom">
       <div className="container-fluid d-flex justify-content-between align-items-center">
         <ul className="navbar-nav d-flex flex-row">
           {[
-            { href: '/tabs', label: 'Tabs' },
+            { href: '/', label: 'Tabs' },
             { href: '/pre-lab-questions', label: 'Pre-lab Questions' },
             { href: '/escape-room', label: 'Escape Room' },
             { href: '/coding-races', label: 'Coding Races' },
@@ -32,9 +32,8 @@ export default function Navbar() {
             <li className="nav-item me-3" key={link.href}>
               <Link
                 href={link.href}
-                className={`nav-link ${linkColorClass} ${
-                  pathname === link.href ? 'active fw-bold' : ''
-                }`}
+                className={`nav-link ${linkColorClass} ${pathname === link.href ? 'active fw-bold' : ''
+                  }`}
               >
                 {link.label}
               </Link>

@@ -3,11 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "node -r ./instrumentation.ts node_modules/next/dist/bin/next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.7.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.50.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.52.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.52.0",
+    "@opentelemetry/resources": "^1.17.1",
+    "@opentelemetry/sdk-node": "^0.52.0",
+    "@opentelemetry/semantic-conventions": "^1.17.1",
     "next": "15.5.6",
     "pg-hstore": "^2.3.4",
     "react": "19.1.0",

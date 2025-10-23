@@ -1,3 +1,4 @@
+// assi2/api/migrations/20251022000804-create-question.js
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
