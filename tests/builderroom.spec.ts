@@ -2,7 +2,7 @@
 import { test, expect } from '@playwright/test';
 
 // Deployed frontend URL
-const FRONTEND_URL = 'http://ec2-3-85-115-208.compute-1.amazonaws.com/escape-room';
+const FRONTEND_URL = 'http://ec2-13-222-130-180.compute-1.amazonaws.com/escape-room';
 
 test.skip(({ browserName }) => browserName === 'webkit', 'WebKit not supported on this host');
 

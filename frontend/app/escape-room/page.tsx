@@ -7,7 +7,7 @@ import GamePanel from '../Components/escape-room/GamePanel';
 import OverlayEndScreen from '../Components/escape-room/OverlayEndScreen';
 import { Question, ObjectItem } from '../Components/escape-room/types';
 
-const APIURL = 'http://ec2-52-23-231-99.compute-1.amazonaws.com:4080';
+const APIURL = 'http://ec2-13-222-130-180.compute-1.amazonaws.com:4080';
 
 export default function EscapeRoom() {
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
@@ -201,7 +201,7 @@ export default function EscapeRoom() {
                 type="number"
                 className="form-control"
                 min={1}
-                max={allQuestions.length || 1}
+                max={allQuestions.length}
                 value={questionCount}
                 onChange={(e) =>
                   setQuestionCount(Math.min(Math.max(Number(e.target.value), 1), allQuestions.length))
@@ -209,9 +209,6 @@ export default function EscapeRoom() {
                 style={{ width: '150px' }}
                 disabled={allQuestions.length === 0}
               />
-              <small className="text-muted">
-                Available questions: {allQuestions.length || 0}
-              </small>
             </div>
 
             <div className="mb-3">

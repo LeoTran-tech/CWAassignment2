@@ -38,10 +38,10 @@ export async function POST(request: NextRequest) {
 
         const existing = await Question.findOne({ where: { question: question.trim() } });
         if (existing) {
-            return new NextResponse('Duplicate question not allowed', {
-                status: 409, // Conflict
-                headers: corsHeaders,
-            });
+            return NextResponse.json(
+                { error: 'Duplicate question not allowed' },
+                { status: 409, headers: corsHeaders }
+            );
         }
 
         const q = await Question.create({ topic, question, hint, answer });

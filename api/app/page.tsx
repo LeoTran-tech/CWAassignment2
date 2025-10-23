@@ -62,7 +62,9 @@ const ApiDocumentation: React.FC = () => {
       <h3>2️⃣ POST Request</h3>
       <p>Create a new question entry:</p>
       <pre>
-        <code>{`curl -X POST ${baseUrl}:4080/api/questions -H "Content-Type: application/json" -d "{\"topic\":\"Python\",\"question\":\"What is a decorator?\",\"hint\":\"It modifies another function\",\"answer\":\"A function that wraps another function\"}"`}</code>
+        <code>{`curl -X POST ${baseUrl}:4080/api/questions \\
+        -H "Content-Type: application/json" \\
+        -d '{"topic":"Python","question":"What is a decorator?","hint":"It modifies another function","answer":"A function that wraps another function"}'`} </code>
       </pre>
 
       <p><strong>PowerShell equivalent:</strong></p>
@@ -75,7 +77,9 @@ const ApiDocumentation: React.FC = () => {
       <h3>3️⃣ PATCH Request</h3>
       <p>Update an existing question (by ID):</p>
       <pre>
-        <code>{`curl -X PATCH ${baseUrl}:4080/api/questions/1 -H "Content-Type: application/json" -d "{\"hint\":\"Used for wrapping or enhancing functions\"}"`}</code>
+        <code>{`curl -X PATCH ${baseUrl}:4080/api/questions/1 \\
+          -H "Content-Type: application/json" \\
+          -d '{"hint":"Used for wrapping or enhancing functions"}'`}</code>
       </pre>
 
       <p><strong>PowerShell equivalent:</strong></p>
