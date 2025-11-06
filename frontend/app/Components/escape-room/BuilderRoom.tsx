@@ -12,7 +12,6 @@ interface Props {
 export default function BuilderRoom({ onRefresh }: Props) {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [editingId, setEditingId] = useState<number | null>(null);
-
     const [newTopic, setNewTopic] = useState('');
     const [newQuestion, setNewQuestion] = useState('');
     const [newAnswer, setNewAnswer] = useState('');
@@ -104,7 +103,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
     return (
         <div>
             <h2>Builder Room</h2>
-            <h3>Warning: No 2 questions can be the same!</h3>
+            <h3>Warning: No 2 questions in the &quot;Question&quot; column can be the same!</h3>
 
             {/* Add / Edit form */}
             <div className="mb-3 row">
