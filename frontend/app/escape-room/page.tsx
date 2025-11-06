@@ -7,7 +7,7 @@ import GamePanel from '../Components/escape-room/GamePanel';
 import OverlayEndScreen from '../Components/escape-room/OverlayEndScreen';
 import { Question, ObjectItem } from '../Components/escape-room/types';
 
-const APIURL = 'http://ec2-13-222-130-180.compute-1.amazonaws.com:4080';
+const APIURL = 'http://ec2-54-237-223-193.compute-1.amazonaws.com:4080';
 
 export default function EscapeRoom() {
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);

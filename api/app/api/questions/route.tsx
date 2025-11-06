@@ -51,27 +51,3 @@ export async function POST(request: NextRequest) {
         return new NextResponse('Invalid request', { status: 400, headers: corsHeaders });
     }
 }
-
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-    try {
-        const { id } = params;
-        const body = await request.json();
-        const [updated] = await Question.update(body, { where: { id } });
-        if (!updated) return new NextResponse('Not found', { status: 404 });
-        return new NextResponse('Updated successfully', { status: 200, headers: corsHeaders });
-    } catch (error) {
-        console.error(error);
-        return new NextResponse('Invalid request', { status: 400, headers: corsHeaders });
-    }
-}
-
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-    try {
-        const { id } = params;
-        await Question.destroy({ where: { id } });
-        return new NextResponse('Deleted successfully', { status: 200, headers: corsHeaders });
-    } catch (error) {
-        console.error(error);
-        return new NextResponse('Server error', { status: 500, headers: corsHeaders });
-    }
-}

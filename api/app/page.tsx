@@ -43,18 +43,32 @@ const ApiDocumentation: React.FC = () => {
       <hr />
       <br />
       <h3>1️⃣ GET Request</h3>
-      <p>Fetch all questions, or filter by topic:</p>
+      <p>Fetch all questions:</p>
       <pre>
-        <code>{`curl -X GET ${baseUrl}:4080/api/questions`}</code>
-      </pre>
-      <p>Filter by topic:</p>
-      <pre>
-        <code>{`curl -X GET "${baseUrl}:4080/api/questions?topic=Python"`}</code>
+        <code>
+          {`🪟 Windows CMD
+curl -X GET "${baseUrl}:4080/api/questions"
+
+💻 PowerShell
+Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions" -Method Get
+
+🐧 Linux / macOS
+curl -X GET "${baseUrl}:4080/api/questions"`}
+        </code>
       </pre>
 
-      <p><strong>PowerShell equivalent:</strong></p>
+      <p>Filter by topic:</p>
       <pre>
-        <code>{`Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions?topic=Python" -Method Get`}</code>
+        <code>
+          {`🪟 Windows CMD
+curl -X GET "${baseUrl}:4080/api/questions?topic=Python"
+
+💻 PowerShell
+Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions?topic=Python" -Method Get
+
+🐧 Linux / macOS
+curl -X GET "${baseUrl}:4080/api/questions?topic=Python"`}
+        </code>
       </pre>
 
       <hr />
@@ -62,14 +76,16 @@ const ApiDocumentation: React.FC = () => {
       <h3>2️⃣ POST Request</h3>
       <p>Create a new question entry:</p>
       <pre>
-        <code>{`curl -X POST ${baseUrl}:4080/api/questions \\
-        -H "Content-Type: application/json" \\
-        -d '{"topic":"Python","question":"What is a decorator?","hint":"It modifies another function","answer":"A function that wraps another function"}'`} </code>
-      </pre>
+        <code>{`🪟 Windows CMD
+curl -X POST "${baseUrl}:4080/api/questions" -H "Content-Type: application/json" -d "{\\"topic\\":\\"Python\\",\\"question\\":\\"What is a decorator?\\",\\"hint\\":\\"It modifies another function\\",\\"answer\\":\\"A function that wraps another function\\"}"
 
-      <p><strong>PowerShell equivalent:</strong></p>
-      <pre>
-        <code>{`Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions" -Method Post -ContentType "application/json" -Body '{"topic":"Python","question":"What is a decorator?","hint":"It modifies another function","answer":"A function that wraps another function"}'`}</code>
+💻 PowerShell
+Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions" -Method Post -ContentType "application/json" -Body '{"topic":"Python","question":"What is a decorator?","hint":"It modifies another function","answer":"A function that wraps another function"}'
+
+🐧 Linux / macOS
+curl -X POST "${baseUrl}:4080/api/questions" \\
+  -H "Content-Type: application/json" \\
+  -d '{"topic":"Python","question":"What is a decorator?","hint":"It modifies another function","answer":"A function that wraps another function"}'`} </code>
       </pre>
 
       <hr />
@@ -77,14 +93,18 @@ const ApiDocumentation: React.FC = () => {
       <h3>3️⃣ PATCH Request</h3>
       <p>Update an existing question (by ID):</p>
       <pre>
-        <code>{`curl -X PATCH ${baseUrl}:4080/api/questions/1 \\
-          -H "Content-Type: application/json" \\
-          -d '{"hint":"Used for wrapping or enhancing functions"}'`}</code>
-      </pre>
+        <code>
+          {`🪟 Windows CMD
+curl -X PATCH "${baseUrl}:4080/api/questions/1" -H "Content-Type: application/json" -d "{\\"hint\\":\\"Used for wrapping or enhancing functions\\"}"
 
-      <p><strong>PowerShell equivalent:</strong></p>
-      <pre>
-        <code>{`Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions/1" -Method Patch -ContentType "application/json" -Body '{"hint":"Used for wrapping or enhancing functions"}'`}</code>
+💻 PowerShell
+Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions/1" -Method Patch -ContentType "application/json" -Body '{"hint":"Used for wrapping or enhancing functions"}'
+
+🐧 Linux / macOS
+curl -X PATCH "${baseUrl}:4080/api/questions/1" \\
+  -H "Content-Type: application/json" \\
+  -d '{"hint":"Used for wrapping or enhancing functions"}'`}
+        </code>
       </pre>
 
       <hr />
@@ -92,12 +112,14 @@ const ApiDocumentation: React.FC = () => {
       <h3>4️⃣ DELETE Request</h3>
       <p>Delete a question (by ID):</p>
       <pre>
-        <code>{`curl -X DELETE ${baseUrl}:4080/api/questions/1`}</code>
-      </pre>
+        <code>{`🪟 Windows CMD
+curl -X DELETE "${baseUrl}:4080/api/questions/1"
 
-      <p><strong>PowerShell equivalent:</strong></p>
-      <pre>
-        <code>{`Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions/1" -Method Delete`}</code>
+💻 PowerShell
+Invoke-RestMethod -Uri "${baseUrl}:4080/api/questions/1" -Method Delete
+
+🐧 Linux / macOS
+curl -X DELETE "${baseUrl}:4080/api/questions/1"`}</code>
       </pre>
 
       <footer style={{ marginTop: '24px', fontSize: '0.9rem', color: '#555' }}>

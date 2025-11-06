@@ -23,6 +23,18 @@ export async function PATCH(
         const { id } = await context.params; // ✅ must await
 
         const body = await request.json();
+
+        if (body.question) {
+            const existing = await Question.findOne({ where: { question: body.question.trim() } });
+
+            if (existing && existing.id.toString() !== id) {
+                return NextResponse.json(
+                    { error: 'Duplicate question not allowed' },
+                    { status: 409, headers: corsHeaders }
+                );
+            }
+        }
+
         const [updated] = await Question.update(body, { where: { id } });
 
         if (!updated)
