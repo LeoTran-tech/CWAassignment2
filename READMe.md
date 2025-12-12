@@ -1,89 +1,208 @@
-README.md — Assignment 2 Cloud Deployment & Lambda Function Project Overview
+# Escape Room Web Application – Cloud Deployment & Observability
 
-This project demonstrates a cloud-deployed web application integrated with a serverless AWS Lambda function that dynamically generates HTML pages. It uses modern web technologies such as Next.js (v15) and AWS services including S3, Lambda, and API Gateway.
+**Author:** Anh Quan (Leo) Tran
+**Course:** CSE3CWA – Web Application Development
+**Assignment:** Escape Room Application with Cloud Deployment, Observability & Testing
 
-Cloud Deployment — AWS S3
 
-The frontend (Next.js) application was built, exported, and deployed to an AWS S3 bucket configured for static website hosting.
+## 📌 Project Overview
 
-Steps:
+This project is a full-stack **Escape Room web application** designed to manage and play coding challenges in an interactive environment.
 
-Ran the production build:
+The application consists of:
 
-npm run build npm run export
+* A **Next.js frontend** for gameplay and question management
+* A **Next.js + Sequelize backend API** with SQLite persistence
+* A **cloud deployment on AWS EC2**
+* **Static website hosting on AWS S3**
+* **Observability and monitoring** using OpenTelemetry, Jaeger, Zipkin, and Prometheus
+* **Automated testing** with Playwright (API + UI)
 
-Created an S3 bucket named s3cse3cwa-21519278-23-10-2025.
+## 🏗️ System Architecture
 
-Enabled Static Website Hosting in S3 settings.
+### Core Components
 
-Set index document to index.html.
+* **Frontend:** Next.js (App Router)
+* **Backend API:** Next.js API routes + Sequelize ORM
+* **Database:** SQLite (containerized volume)
+* **Containerization:** Docker & Docker Compose
+* **Cloud Platform:** AWS EC2 (Free Tier)
+* **Static Hosting:** AWS S3 (Static Website Hosting)
+* **Monitoring:** OpenTelemetry Collector, Jaeger, Zipkin, Prometheus
+* **Testing:** Playwright (API & UI tests)
 
-Attached a public access policy:
+## ☁️ Cloud Deployment
 
-{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": "", "Action": "s3:GetObject", "Resource": "arn:aws:s3:::assi2-huynh-frontend/" } ] }
+### AWS EC2
 
-Uploaded the /out folder (from next export) to the S3 bucket.
+The entire application stack is deployed on an AWS EC2 instance using Docker Compose.
 
-Result:
+Exposed services:
 
-The static website is accessible publicly at http://assi2-huynh-frontend.s3-website-ap-southeast-2.amazonaws.com
+* **Frontend:** `http://<EC2-IP>/`
+* **Backend API:** `http://<EC2-IP>:4080/`
 
-Serverless Lambda Function
+Docker Compose orchestrates:
 
-A Node.js (v18) AWS Lambda function was created to dynamically generate and return an HTML page.
+* Frontend container
+* API container
+* SQLite volume holder
+* OpenTelemetry Collector
+* Jaeger
+* Zipkin
+* Prometheus
 
-Function Name
 
-generateDynamicPage
+## 🌐 Static Website Hosting (AWS S3)
 
-Code: export async function handler(event) { const name = event.queryStringParameters?.name || "Guest"; const color = event.queryStringParameters?.color || "steelblue";
+A production build of the frontend was generated using:
 
-const body = `
+```bash
+npm run build
+```
 
-<title>Dynamic Lambda Page</title> <style> body { background-color: ${color}; font-family: Arial, sans-serif; color: white; text-align: center; padding: 50px; } h1 { font-size: 2.5em; margin-bottom: 0.5em; } p { font-size: 1.2em; } </style>
-Welcome, ${name}!
-This page was generated dynamically by AWS Lambda.
+The static output was uploaded to an **S3 bucket** with:
 
-Time: ${new Date().toLocaleString()}
+* Static website hosting enabled
+* Public read access via bucket policy
+* `index.html` configured as the entry point
 
-`;
-return { statusCode: 200, headers: { "Content-Type": "text/html" }, body }; }
+This satisfies the requirement for **static website deployment in the cloud**.
 
-Description:
 
-The Lambda function uses query parameters (name and color) to create dynamic HTML content with inline CSS styling and a timestamp.
+## 🔁 AWS Lambda – Dynamic Page Generation
 
-Example URL: https://.execute-api.ap-southeast-2.amazonaws.com/default/generateDynamicPage?name=Huynh&color=royalblue
+An AWS Lambda function was implemented to demonstrate **dynamic content generation**.
 
-🔗 Integration (Optional Enhancement)
+The Lambda:
 
-The Lambda endpoint can be linked directly from the S3 static website:
+* Runs on **Node.js (ES module)**
+* Dynamically returns HTML content based on request parameters
+* Can be triggered via API Gateway
 
-Try My Dynamic Lambda Page
-This integration allows users to launch a serverless dynamic page directly from the static frontend.
+This fulfills the requirement to:
 
-Screenshots Included
+> “Add a lambda function that creates dynamic pages of your HTML output.”
 
-S3 bucket configuration (Static website hosting)
+## 📊 Observability & Monitoring
 
-Website running in browser (index.html)
+The application is fully instrumented using **OpenTelemetry**.
 
-Lambda console showing code
+### Observability Stack
 
-Lambda test result (“Welcome, Huynh!”)
+* **OpenTelemetry SDK (Node.js)**
+* **OpenTelemetry Collector**
+* **Jaeger** – Trace visualization
+* **Zipkin** – Distributed tracing
+* **Prometheus** – Metrics collection
 
-Public API Gateway URL result (optional bonus)
+### Service Name
 
-Reflection
+All backend traces are reported under:
 
-This project demonstrates:
+```
+service.name = api-service
+```
 
-Deployment of a Next.js application on AWS S3 for scalable, cost-effective hosting.
+### Dashboards
 
-Use of AWS Lambda for serverless dynamic content generation.
+| Tool         | URL                            |
+| ------------ | ------------------------------ |
+| Frontend     | `http://<EC2-IP>/`             |
+| Backend API  | `http://<EC2-IP>:4080/`        |
+| Jaeger       | `http://<EC2-IP>:16686/`       |
+| Zipkin       | `http://<EC2-IP>:9411/`        |
+| Prometheus   | `http://<EC2-IP>:9090/`        |
+| OTEL Metrics | `http://<EC2-IP>:8888/metrics` |
 
-Understanding of serverless architecture and event-driven web systems.
+Traces such as `GET /api/questions` and database interactions are visible in Jaeger and Zipkin.
 
-Together, these showcase modern full-stack cloud development practices.
+## 🔌 API Documentation
 
-Author: Leo Subject: Cloud Deployment & Serverless Computing (Assignment 2) Date: October 2025
+### Base URL
+
+```
+http://<EC2-IP>:4080/api/questions
+```
+
+### Endpoints
+
+#### GET – Fetch questions
+
+```bash
+curl -X GET http://<EC2-IP>:4080/api/questions
+```
+
+#### POST – Create a question
+
+```bash
+curl -X POST http://<EC2-IP>:4080/api/questions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "topic": "Python",
+    "question": "What is a decorator?",
+    "hint": "It modifies another function",
+    "answer": "A function that wraps another function"
+  }'
+```
+
+#### PATCH – Update a question
+
+```bash
+curl -X PATCH http://<EC2-IP>:4080/api/questions/1 \
+  -H "Content-Type: application/json" \
+  -d '{"hint":"Updated hint"}'
+```
+
+#### DELETE – Remove a question
+
+```bash
+curl -X DELETE http://<EC2-IP>:4080/api/questions/1
+```
+
+Duplicate entries return:
+
+```json
+{ "error": "Duplicate question not allowed" }
+```
+
+with HTTP status `409`.
+
+## 🧪 Automated Testing
+
+Automated tests were implemented using **Playwright**.
+
+### Test Coverage
+
+* ✅ API endpoint tests (GET, POST, PATCH, DELETE)
+* ✅ Duplicate handling
+* ✅ UI workflow test (Builder Room: add, edit, delete question)
+
+### Run tests
+
+```bash
+npx playwright test
+```
+
+All tests pass successfully after handling duplicate-safe logic.
+
+
+## 📦 Docker Usage
+
+### Build containers
+
+```bash
+docker-compose build --no-cache
+```
+
+### Run application
+
+```bash
+docker-compose up
+```
+
+### Stop containers
+
+```bash
+docker-compose down
+```
