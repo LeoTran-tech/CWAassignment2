@@ -1,57 +1,59 @@
 # Escape Room Web Application – Cloud Deployment & Observability
 
-**Author:** Anh Quan (Leo) Tran
-**Course:** CSE3CWA – Web Application Development
-**Assignment:** Escape Room Application with Cloud Deployment, Observability & Testing
-
+Author: Anh Quan (Leo) Tran
+Course: CSE3CWA – Web Application Development
+Assignment: Escape Room Application with Cloud Deployment, Observability & Testing
 
 ## 📌 Project Overview
 
-This project is a full-stack **Escape Room web application** designed to manage and play coding challenges in an interactive environment.
+This project is a full-stack Escape Room web application designed to manage and play coding challenges in an interactive, game-based environment.
 
-The application consists of:
+The system demonstrates modern web application architecture, cloud deployment, observability, and automated testing, aligning with real-world industry practices.
 
-* A **Next.js frontend** for gameplay and question management
-* A **Next.js + Sequelize backend API** with SQLite persistence
-* A **cloud deployment on AWS EC2**
-* **Static website hosting on AWS S3**
-* **Observability and monitoring** using OpenTelemetry, Jaeger, Zipkin, and Prometheus
-* **Automated testing** with Playwright (API + UI)
+The application includes:
+
+* A Next.js frontend for gameplay and question management
+* A Next.js + Sequelize backend API with persistent storage
+* Cloud deployment on AWS EC2
+* Static website hosting using AWS S3
+* Serverless dynamic content using AWS Lambda
+* Full observability stack (OpenTelemetry, Jaeger, Zipkin, Prometheus)
+* Automated API & UI testing using Playwright
 
 ## 🏗️ System Architecture
 
 ### Core Components
 
-* **Frontend:** Next.js (App Router)
-* **Backend API:** Next.js API routes + Sequelize ORM
-* **Database:** SQLite (containerized volume)
-* **Containerization:** Docker & Docker Compose
-* **Cloud Platform:** AWS EC2 (Free Tier)
-* **Static Hosting:** AWS S3 (Static Website Hosting)
-* **Monitoring:** OpenTelemetry Collector, Jaeger, Zipkin, Prometheus
-* **Testing:** Playwright (API & UI tests)
+* Frontend: Next.js (App Router)
+* Backend API: Next.js API routes + Sequelize ORM
+* Database: SQLite (Docker volume)
+* Containerisation: Docker & Docker Compose
+* Cloud Platform: AWS EC2 (Free Tier)
+* Static Hosting: AWS S3 (Static Website Hosting)
+* Serverless: AWS Lambda
+* Monitoring: OpenTelemetry Collector, Jaeger, Zipkin, Prometheus
+* Testing: Playwright (API & UI tests)
 
-## ☁️ Cloud Deployment
+All services are orchestrated using Docker Compose on a single EC2 instance.
 
-### AWS EC2
+## ☁️ Cloud Deployment (AWS EC2)
 
 The entire application stack is deployed on an AWS EC2 instance using Docker Compose.
 
-Exposed services:
+### Public Endpoints
 
-* **Frontend:** `http://<EC2-IP>/`
-* **Backend API:** `http://<EC2-IP>:4080/`
+* Frontend: `http://<EC2-IP>/`
+* Backend API: `http://<EC2-IP>:4080/`
 
-Docker Compose orchestrates:
+The EC2 instance runs:
 
 * Frontend container
-* API container
-* SQLite volume holder
+* Backend API container
+* SQLite volume container
 * OpenTelemetry Collector
 * Jaeger
 * Zipkin
 * Prometheus
-
 
 ## 🌐 Static Website Hosting (AWS S3)
 
@@ -61,50 +63,73 @@ A production build of the frontend was generated using:
 npm run build
 ```
 
-The static output was uploaded to an **S3 bucket** with:
+The static output was uploaded to an AWS S3 bucket with:
 
 * Static website hosting enabled
 * Public read access via bucket policy
 * `index.html` configured as the entry point
 
-This satisfies the requirement for **static website deployment in the cloud**.
+This satisfies the requirement for static website deployment in the cloud.
 
+## 🔁 AWS Lambda – Dynamic HTML Generation
 
-## 🔁 AWS Lambda – Dynamic Page Generation
+An AWS Lambda function was implemented to demonstrate dynamic page generation.
 
-An AWS Lambda function was implemented to demonstrate **dynamic content generation**.
+The Lambda function:
 
-The Lambda:
+* Runs on Node.js (ES module runtime)
+* Dynamically generates HTML output based on request parameters
+* Can be invoked via API Gateway
 
-* Runs on **Node.js (ES module)**
-* Dynamically returns HTML content based on request parameters
-* Can be triggered via API Gateway
+This fulfills the requirement:
 
-This fulfills the requirement to:
+> “Add a Lambda function that creates dynamic pages of your HTML output.”
 
-> “Add a lambda function that creates dynamic pages of your HTML output.”
 
 ## 📊 Observability & Monitoring
 
-The application is fully instrumented using **OpenTelemetry**.
+The backend API is fully instrumented using OpenTelemetry.
 
 ### Observability Stack
 
-* **OpenTelemetry SDK (Node.js)**
-* **OpenTelemetry Collector**
-* **Jaeger** – Trace visualization
-* **Zipkin** – Distributed tracing
-* **Prometheus** – Metrics collection
+* OpenTelemetry SDK (Node.js)
+* OpenTelemetry Collector
+* Jaeger – Distributed trace visualisation
+* Zipkin – Trace dashboard
+* Prometheus – Metrics collection and querying
 
-### Service Name
+### Service Identification
 
-All backend traces are reported under:
+All traces are exported with:
 
 ```
 service.name = api-service
 ```
 
-### Dashboards
+This allows easy filtering in Jaeger and Zipkin.
+
+## 🔌 Deployed Services & Ports
+
+The following services are exposed on the EC2 instance:
+
+| Service           | Port  | Description                    |
+| ----------------- | ----- | ------------------------------ |
+| jaegertracing     | 16686 | Jaeger Web UI                  |
+| jaegertracing     | 14268 | Jaeger HTTP Receiver           |
+| jaegertracing     | 14250 | Jaeger gRPC Receiver           |
+| zipkin-all-in-one | 9411  | Zipkin UI & HTTP API           |
+| otel-collector    | 1888  | pprof Extension                |
+| otel-collector    | 8888  | Prometheus Metrics (Collector) |
+| otel-collector    | 8889  | Prometheus Exporter Metrics    |
+| otel-collector    | 13133 | Health Check                   |
+| otel-collector    | 4317  | OTLP gRPC Receiver             |
+| otel-collector    | 4318  | OTLP HTTP Receiver             |
+| otel-collector    | 55679 | zPages Extension               |
+| prometheus        | 9090  | Prometheus UI & API            |
+| next.js           | 3000  | Next.js Development Server     |
+| backend api       | 4080  | REST API Service               |
+
+## 📈 Monitoring Dashboards
 
 | Tool         | URL                            |
 | ------------ | ------------------------------ |
@@ -127,7 +152,7 @@ http://<EC2-IP>:4080/api/questions
 
 ### Endpoints
 
-#### GET – Fetch questions
+#### GET – Fetch all questions
 
 ```bash
 curl -X GET http://<EC2-IP>:4080/api/questions
@@ -160,32 +185,31 @@ curl -X PATCH http://<EC2-IP>:4080/api/questions/1 \
 curl -X DELETE http://<EC2-IP>:4080/api/questions/1
 ```
 
-Duplicate entries return:
+Duplicate questions return:
 
 ```json
 { "error": "Duplicate question not allowed" }
 ```
 
-with HTTP status `409`.
+with HTTP status 409 Conflict.
 
-## 🧪 Automated Testing
+## 🧪 Automated Testing (Playwright)
 
-Automated tests were implemented using **Playwright**.
+Automated tests were implemented using Playwright.
 
 ### Test Coverage
 
-* ✅ API endpoint tests (GET, POST, PATCH, DELETE)
-* ✅ Duplicate handling
+* ✅ REST API tests (GET, POST, PATCH, DELETE)
+* ✅ Duplicate-safe logic validation
 * ✅ UI workflow test (Builder Room: add, edit, delete question)
 
-### Run tests
+### Run tests locally or in CI
 
 ```bash
 npx playwright test
 ```
 
-All tests pass successfully after handling duplicate-safe logic.
-
+Tests are also executed in GitHub Actions CI.
 
 ## 📦 Docker Usage
 
@@ -206,3 +230,12 @@ docker-compose up
 ```bash
 docker-compose down
 ```
+
+## ⚠️ AWS Free Tier Cost Notice
+
+This project is deployed using an AWS Free Tier EC2 instance with limited credits.
+
+As a result:
+
+* The EC2 instance may be stopped after marking
+* Public URLs may become unavailable in the future
