@@ -15,4 +15,4 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
-console.log('✅ OpenTelemetry initialized for API service');
+console.log('OpenTelemetry initialized for API service');

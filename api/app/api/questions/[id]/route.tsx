@@ -8,19 +8,19 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// ✅ Preflight handler
+// Preflight handler
 export async function OPTIONS() {
     return new NextResponse(null, { status: 204, headers: corsHeaders });
 }
 
-// ✅ PATCH /api/questions/[id]
+// PATCH /api/questions/[id]
 export async function PATCH(
     request: NextRequest,
-    context: { params: Promise<{ id: string }> } // 👈 params is a Promise now
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await initDB();
-        const { id } = await context.params; // ✅ must await
+        const { id } = await context.params;
 
         const body = await request.json();
 
@@ -40,7 +40,7 @@ export async function PATCH(
         if (!updated)
             return new NextResponse('Question not found', { status: 404, headers: corsHeaders });
 
-        return new NextResponse('✅ Question updated successfully', {
+        return new NextResponse('Question updated successfully', {
             status: 200,
             headers: corsHeaders,
         });
@@ -50,21 +50,21 @@ export async function PATCH(
     }
 }
 
-// ✅ DELETE /api/questions/[id]
+// DELETE /api/questions/[id]
 export async function DELETE(
     request: NextRequest,
-    context: { params: Promise<{ id: string }> } // 👈 same here
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await initDB();
-        const { id } = await context.params; // ✅ must await
+        const { id } = await context.params;
 
         const deleted = await Question.destroy({ where: { id } });
 
         if (!deleted)
             return new NextResponse('Question not found', { status: 404, headers: corsHeaders });
 
-        return new NextResponse('🗑️ Question deleted successfully', {
+        return new NextResponse('Question deleted successfully', {
             status: 200,
             headers: corsHeaders,
         });

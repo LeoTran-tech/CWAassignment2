@@ -7,7 +7,7 @@ import GamePanel from '../Components/escape-room/GamePanel';
 import OverlayEndScreen from '../Components/escape-room/OverlayEndScreen';
 import { Question, ObjectItem } from '../Components/escape-room/types';
 
-const APIURL = 'http://ec2-54-237-223-193.compute-1.amazonaws.com:4080';
+const APIURL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com:4080';
 
 export default function EscapeRoom() {
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
@@ -16,17 +16,17 @@ export default function EscapeRoom() {
   const [gameStarted, setGameStarted] = useState(false);
   const [showBuilder, setShowBuilder] = useState(false);
 
-  // 🎮 Zoom & drag controls
+  // Zoom & drag controls
   const [zoom, setZoom] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [startMouse, setStartMouse] = useState({ x: 0, y: 0 });
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
-  // 🕒 Timer
+  // Timer
   const [remainingTime, setRemainingTime] = useState<number>(0);
 
-  // 💬 Game state
+  // Game state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showQuestion, setShowQuestion] = useState(false);
   const [showHint, setShowHint] = useState(false);
@@ -44,7 +44,7 @@ export default function EscapeRoom() {
     { src: '/escape-room/objects-for-coding-challenges/computer.svg', action: 'answer' },
   ];
 
-  // 🧠 Load all questions from backend
+  // Load all questions from backend
   const fetchQuestions = async () => {
     try {
       const res = await fetch(`${APIURL}/api/questions`);
@@ -64,7 +64,7 @@ export default function EscapeRoom() {
     fetchQuestions();
   }, []);
 
-  // 🎲 Pick n random questions
+  // Pick n random questions
   const pickRandomQuestions = (n: number, pool: Question[]) => {
     const shuffled = [...pool].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, n);
@@ -72,21 +72,21 @@ export default function EscapeRoom() {
 
   const handleStartGame = () => {
     if (allQuestions.length === 0) {
-      alert('⚠️ No questions available. Please add some first.');
+      alert('No questions available. Please add some first.');
       return;
     }
 
     const n = Math.min(questionCount, allQuestions.length);
     const selected = pickRandomQuestions(n, allQuestions);
     setGameQuestions(selected);
-    setRemainingTime(n * 60); // 🕒 1 minute per question
+    setRemainingTime(n * 60); // 1 minute per question
     setGameStarted(true);
     setTimeUp(false);
     setPosition({ x: 0, y: 0 });
     setZoom(1);
   };
 
-  // ⏳ Timer countdown effect
+  // Timer countdown effect
   useEffect(() => {
     if (!gameStarted || timeUp || gameOver) return;
 
@@ -104,7 +104,7 @@ export default function EscapeRoom() {
     return () => clearInterval(timer);
   }, [gameStarted, timeUp, gameOver]);
 
-  // 🖱️ Drag handlers
+  // Drag handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartMouse({ x: e.clientX, y: e.clientY });
@@ -139,7 +139,7 @@ export default function EscapeRoom() {
 
   const handleMouseUp = () => setIsDragging(false);
 
-  // 🎯 Handle object click actions
+  // Handle object click actions
   const handleClickAction = (action: string) => {
     if (action === 'question') setShowQuestion(true);
     if (action === 'hint') setShowHint(true);
@@ -156,7 +156,7 @@ export default function EscapeRoom() {
 
     const normalize = (s: string) => s.trim().toLowerCase();
     if (normalize(userAnswer) === normalize(q.answer)) {
-      setFeedback('✅ Correct!');
+      setFeedback('Correct!');
       setTimeout(() => {
         setFeedback('');
         setUserAnswer('');
@@ -167,7 +167,7 @@ export default function EscapeRoom() {
         if (currentQuestionIndex + 1 >= gameQuestions.length) setGameOver(true);
         setCurrentQuestionIndex((prev) => prev + 1);
       }, 1000);
-    } else setFeedback('❌ Wrong! Try again.');
+    } else setFeedback('Wrong! Try again.');
   };
 
   const handleReset = () => {
@@ -194,7 +194,7 @@ export default function EscapeRoom() {
             <h1>Escape Room</h1>
             <p>Solve coding challenges before the timer runs out.</p>
 
-            {/* 🧩 Game setup section */}
+            {/* Game setup section */}
             <div className="mb-3">
               <label className="form-label fw-bold">Number of Questions:</label>
               <input
@@ -229,7 +229,7 @@ export default function EscapeRoom() {
 
             {allQuestions.length === 0 && (
               <p className="text-danger">
-                ⚠️ There are no questions yet. Please open the Builder Room to add some.
+                There are no questions yet. Please open the Builder Room to add some.
               </p>
             )}
 

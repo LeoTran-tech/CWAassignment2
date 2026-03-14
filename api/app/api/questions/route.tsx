@@ -1,4 +1,5 @@
 // assi2/api/app/api/questions/route.tsx
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Question, initDB } from '../../lib/sequelize';
 
@@ -14,7 +15,7 @@ export async function OPTIONS() {
 
 export async function GET(request: NextRequest) {
     try {
-        await initDB(); // ✅ ensure DB + table ready
+        await initDB();
 
         const topic = request.nextUrl.searchParams.get('topic');
         const where = topic ? { where: { topic } } : {};
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        await initDB(); // ✅ ensure DB ready first
+        await initDB();
 
         const { topic, question, hint, answer } = await request.json();
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Question } from './types';
 
-const APIURL = 'http://ec2-54-237-223-193.compute-1.amazonaws.com:4080';
+const APIURL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com:4080';
 
 interface Props {
     onRefresh?: () => void;
@@ -17,7 +17,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
     const [newAnswer, setNewAnswer] = useState('');
     const [newHint, setNewHint] = useState('');
 
-    // ✅ Fetch all questions
+    // Fetch all questions
     const fetchQuestions = async () => {
         const res = await fetch(`${APIURL}/api/questions`);
         if (res.ok) setQuestions(await res.json());
@@ -27,7 +27,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
         fetchQuestions();
     }, []);
 
-    // ✅ Add new question
+    // Add new question
     const handleAdd = async () => {
         if (!newTopic || !newQuestion || !newAnswer || !newHint) {
             alert('All fields are required.');
@@ -51,7 +51,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
         }
     };
 
-    // ✅ Update question
+    // Update question
     const handleUpdate = async (id: number) => {
         const res = await fetch(`${APIURL}/api/questions/${id}`, {
             method: 'PATCH',
@@ -71,7 +71,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
         }
     };
 
-    // ✅ Delete question
+    // Delete question
     const handleDelete = async (id: number) => {
         const res = await fetch(`${APIURL}/api/questions/${id}`, {
             method: 'DELETE',
@@ -82,7 +82,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
         }
     };
 
-    // ✅ Fill the form for editing
+    // Fill the form for editing
     const startEditing = (q: Question) => {
         setEditingId(q.id!);
         setNewTopic(q.topic);
@@ -91,7 +91,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
         setNewAnswer(q.answer);
     };
 
-    // ✅ Reset form
+    // Reset form
     const resetForm = () => {
         setNewTopic('');
         setNewQuestion('');
@@ -152,7 +152,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
                             className="btn btn-warning me-2"
                             onClick={() => handleUpdate(editingId)}
                         >
-                            ✏️ Update
+                            Update
                         </button>
                         <button className="btn btn-secondary" onClick={resetForm}>
                             Cancel
@@ -160,7 +160,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
                     </>
                 ) : (
                     <button className="btn btn-success" onClick={handleAdd}>
-                        ➕ Add Question
+                        Add Question
                     </button>
                 )}
             </div>
@@ -191,13 +191,13 @@ export default function BuilderRoom({ onRefresh }: Props) {
                                         className="btn btn-sm btn-outline-primary me-2"
                                         onClick={() => startEditing(q)}
                                     >
-                                        ✏️ Edit
+                                        Edit
                                     </button>
                                     <button
                                         className="btn btn-sm btn-outline-danger"
                                         onClick={() => handleDelete(q.id!)}
                                     >
-                                        🗑️ Delete
+                                        Delete
                                     </button>
                                 </td>
                             </tr>

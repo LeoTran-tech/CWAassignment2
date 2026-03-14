@@ -44,7 +44,6 @@ Question.init(
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        // 👇 Add these two fields for TS type checking
         createdAt: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -57,18 +56,18 @@ Question.init(
     {
         sequelize,
         modelName: 'Question',
-        tableName: 'questions',
+        tableName: 'Questions',
         timestamps: true,
     }
 );
 
-// ✅ Ensure DB sync runs only once
+// Ensure DB sync runs only once
 let isSynced = false;
 
 export async function initDB() {
     if (!isSynced) {
-        await sequelize.sync({ alter: true });
-        console.log('✅ SQLite synced successfully');
+        await sequelize.sync();
+        console.log('SQLite synced successfully');
         isSynced = true;
     }
 }

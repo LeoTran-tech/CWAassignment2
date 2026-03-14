@@ -239,3 +239,34 @@ As a result:
 
 * The EC2 instance may be stopped after marking
 * Public URLs may become unavailable in the future
+
+
+## Prerequisites
+
+Make sure the following tools are installed:
+
+- Docker
+- Docker Compose
+
+Docker >= 25
+Docker Compose >= 2
+
+## Run the project
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/CWAassignment2.git
+cd CWAassignment2
+
+Build containers:
+
+docker compose build
+
+Start services:
+
+docker compose up -d
+
+Stop services:
+
+docker compose down

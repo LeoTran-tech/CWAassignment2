@@ -28,9 +28,9 @@ const sdk = new NodeSDK({
 
 try {
     sdk.start();
-    console.log('✅ OpenTelemetry initialized for API service');
+    console.log('OpenTelemetry initialized for API service');
 } catch (error) {
-    console.error('❌ Error initializing OpenTelemetry:', error);
+    console.error('Error initializing OpenTelemetry:', error);
 }
 
 // Remove process.on for Edge Runtime
