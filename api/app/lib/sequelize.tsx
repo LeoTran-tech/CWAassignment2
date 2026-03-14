@@ -1,8 +1,19 @@
 // assi2/api/app/lib/sequelize.tsx
-import { Sequelize, DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+
+// Sequelize is an Object-Relational Mapping library
+import {
+    Sequelize,
+    DataTypes,
+    Model,
+    InferAttributes,
+    InferCreationAttributes,
+    CreationOptional
+} from 'sequelize';
+
 import path from 'path';
 import sqlite3 from 'sqlite3';
 
+// 
 export const sequelize = new Sequelize({
     dialect: 'sqlite',
     dialectModule: sqlite3,
@@ -62,12 +73,12 @@ Question.init(
 );
 
 // Ensure DB sync runs only once
-let isSynced = false;
+let isReady = false;
 
 export async function initDB() {
-    if (!isSynced) {
-        await sequelize.sync();
+    if (!isReady) {
+        await sequelize.authenticate();
         console.log('SQLite synced successfully');
-        isSynced = true;
+        isReady = true;
     }
 }
