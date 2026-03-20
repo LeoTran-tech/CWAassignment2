@@ -1,4 +1,7 @@
 // assi2/tests/api.spec.ts
+
+// This file tests the backend with CRUD, edge case, and DB cleaned up before testing.
+
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com:4080/api/questions';

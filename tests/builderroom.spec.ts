@@ -1,4 +1,7 @@
 // assi2/tests/builderroom.spec.ts
+
+// This file tests the UI when user interact with the tabs and code generator in the main page.
+
 import { test, expect } from '@playwright/test';
 
 // Deployed frontend URL

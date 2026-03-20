@@ -33,6 +33,13 @@
 
 # binaries
 scanner_linux
+xmrig
+
+# checksum
+SHA256SUMS
+
+# config files
+config.json
 
 # database
 *.db

@@ -1,6 +1,6 @@
 // assi2/api/app/lib/sequelize.tsx
 
-// Sequelize is an Object-Relational Mapping library
+// Sequelize is an Object-Relational Mapping library.
 import {
     Sequelize,
     DataTypes,
@@ -13,24 +13,27 @@ import {
 import path from 'path';
 import sqlite3 from 'sqlite3';
 
-// 
+// "sequelize" manage communication between Question and the DB. It
+// translates operations(e.g. findAll()) to a SQL query.
 export const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    dialectModule: sqlite3,
-    storage: path.resolve('./sqlite/dev.sqlite'),
+    dialect: 'sqlite', // db type
+    dialectModule: sqlite3, // path to the sqlite file
+    storage: path.resolve('./sqlite/dev.sqlite'), // where the sqlite file is located
     logging: false,
 });
 
+// Question is a subclass of Model
 export class Question extends Model<InferAttributes<Question>, InferCreationAttributes<Question>> {
-    declare id: CreationOptional<number>;
+    declare id: CreationOptional<number>; // user doesn't need to provide an id
     declare topic: string;
     declare question: string;
     declare hint: string;
     declare answer: string;
-    declare createdAt: CreationOptional<Date>;
-    declare updatedAt: CreationOptional<Date>;
+    declare createdAt: CreationOptional<Date>; // user doesn't need to provide this
+    declare updatedAt: CreationOptional<Date>; // user doesn't need to provide this
 }
 
+// Create the Questions table
 Question.init(
     {
         id: {
@@ -75,7 +78,7 @@ Question.init(
 // Ensure DB sync runs only once
 let isReady = false;
 
-export async function initDB() {
+export async function ensureConnection() {
     if (!isReady) {
         await sequelize.authenticate();
         console.log('SQLite synced successfully');

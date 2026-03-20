@@ -1,11 +1,18 @@
-// app/templates/tabTemplate.ts
-// helper to escape HTML special chars
+// assi2/frontend/app/templates/tabTemplate.ts
+
+// This file contains the template for generating the HTML code for the
+// dynamic tabs. The main function tabTemplate takes in a list of headers
+// and contents, and returns a complete HTML string that can be rendered
+// to display the tabs with their respective contents.
+
+// Helper to escape HTML special chars. This allows users to input code
+// without breaking the generated HTML structure.
 const escapeHTML = (str: string) =>
   str.replace(/&/g, "&amp;")
-     .replace(/</g, "&lt;")
-     .replace(/>/g, "&gt;")
-     .replace(/"/g, "&quot;")
-     .replace(/'/g, "&#039;");
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 export const tabTemplate = (headers: string[], contents: string[]) => `<!DOCTYPE html>
 <html>
@@ -16,6 +23,7 @@ export const tabTemplate = (headers: string[], contents: string[]) => `<!DOCTYPE
   <div class="tab" style="overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1;"></div>
 
   <script>
+    <!-- Get data from React -->
     const headers = ${JSON.stringify(headers)};
     const contents = ${JSON.stringify(contents.map(c => escapeHTML(c)))};
 

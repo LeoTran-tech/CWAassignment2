@@ -1,5 +1,10 @@
 // assi2/frontend/app/page.tsx
 
+// This page includes a client-side code generator that allows users to
+// add, delete mini tabs, and generate HTML code. It uses localStorage (saved
+// in the user's browser) to persist the tabs and their contents across page 
+// reloads. The generated HTML code is displayed in a textarea for users to copy.
+
 'use client';
 
 import { tabTemplate } from './templates/tabTemplate';
@@ -7,13 +12,15 @@ import { useState, useEffect } from 'react';
 import Nav from './Components/Navbar';
 
 export default function TabsPage() {
+  // ---STATE VARIABLES---
   const [steps, setSteps] = useState<string[]>([]); // list of steps
   const [activeStep, setActiveStep] = useState<string | null>(null); // current selected step
-  const [stepTexts, setStepTexts] = useState<{ [key: string]: string }>({}); // stores text for each step
+  const [stepTexts, setStepTexts] = useState<{ [key: string]: string }>({}); // list of text for each step
   const [newStepName, setNewStepName] = useState(''); // input for new step name
-  const [output, setOutput] = useState('');
+  const [output, setOutput] = useState(''); // Generated HTML output shown in the Output panel
 
-  // Load steps and contents from localStorage on mount
+  // ---LOAD SAVED DATA---
+  // when the page loads, restore steps and contents from localStorage
   useEffect(() => {
     const savedSteps = localStorage.getItem('steps');
     const savedTexts = localStorage.getItem('stepTexts');
@@ -26,16 +33,18 @@ export default function TabsPage() {
     if (stepsArray.length > 0) setActiveStep(stepsArray[0]);
   }, []);
 
-  // Save steps and contents to localStorage whenever they change
+  // ---SAVE DATA---
+  // whenever steps or their contents change, update localStorage 
   useEffect(() => {
     localStorage.setItem('steps', JSON.stringify(steps));
     localStorage.setItem('stepTexts', JSON.stringify(stepTexts));
   }, [steps, stepTexts]);
 
-  // Add a new step
+  // ---ADD NEW STEP---
+  // Add a new step with validation rules
   const addStep = () => {
     const trimmedName = newStepName.trim();
-    if (!trimmedName) return; // don't add empty name
+    if (!trimmedName) return; // prevent empty name
 
     // Prevent exceeding 15 steps
     if (steps.length >= 15) {
@@ -53,6 +62,7 @@ export default function TabsPage() {
     setNewStepName(''); // clear input
   };
 
+  // ---DELETE STEP---
   // Delete the last step
   const deleteStep = () => {
     if (steps.length === 0) return;
@@ -72,6 +82,7 @@ export default function TabsPage() {
     }
   };
 
+  // ---UPDATE STEP CONTENT---
   // Update text for the active step
   const handleTextChange = (text: string) => {
     if (!activeStep) return;

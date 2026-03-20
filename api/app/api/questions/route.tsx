@@ -1,15 +1,18 @@
 // assi2/api/app/api/questions/route.tsx
 
 // NextRequest, NextResponse are classes where their instances 
-// represnet the incoming request and outgoing response respectively.
+// represent the incoming request and outgoing response respectively.
 import { NextRequest, NextResponse } from 'next/server';
-import { Question, initDB } from '../../lib/sequelize';
+import { Question, ensureConnection } from '../../lib/sequelize';
 
 // CORS configuration to allow
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*', // any frontend to access the API
     'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization', // specific headers
+
+    // When frontend sends JSON, it includes "Content-Type" header.
+    // "Authorization" is included if frontend sends a token for authentication.
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
 // Handle preflight CORS requests from browsers
@@ -20,7 +23,7 @@ export async function OPTIONS() {
 // GET retrieves questions from the DB
 export async function GET(request: NextRequest) {
     try {
-        await initDB();
+        await ensureConnection();
 
         // retrieve optional topic query parameter
         const topic = request.nextUrl.searchParams.get('topic');
@@ -39,7 +42,7 @@ export async function GET(request: NextRequest) {
 // POST creates a new question in the DB
 export async function POST(request: NextRequest) {
     try {
-        await initDB();
+        await ensureConnection();
 
         // Retrieve fields from the request body
         const { topic, question, hint, answer } = await request.json();

@@ -1,4 +1,9 @@
 // assi2/frontend/app/Components/escape-room/BuilderRoom.tsx
+
+// The BuilderRoom is shown when the user clicks "Open Builder Room" button in
+// the Escape Room tab. It allows users to create, read, update, and delete questions
+// that will be used in the escape room game. It interacts with the backend API.
+
 'use client';
 import { useState, useEffect } from 'react';
 import { Question } from './types';
@@ -10,34 +15,44 @@ interface Props {
 }
 
 export default function BuilderRoom({ onRefresh }: Props) {
+    // --- STATE VARIABLES ---
+
+    // List of questions fetched from the backend
     const [questions, setQuestions] = useState<Question[]>([]);
+    // track which question is being edited
+
     const [editingId, setEditingId] = useState<number | null>(null);
     const [newTopic, setNewTopic] = useState('');
     const [newQuestion, setNewQuestion] = useState('');
     const [newAnswer, setNewAnswer] = useState('');
     const [newHint, setNewHint] = useState('');
 
-    // Fetch all questions
+    // --- FETCH QUESTIONS ---
+    // Fetch all questions from backend api
     const fetchQuestions = async () => {
         const res = await fetch(`${APIURL}/api/questions`);
         if (res.ok) setQuestions(await res.json());
     };
 
+    // whenever user enters the Builder Room, fetch the questions
     useEffect(() => {
         fetchQuestions();
     }, []);
 
+    // --- CRUD OPERATIONS ---
     // Add new question
     const handleAdd = async () => {
+        // Prevent adding if any field is empty
         if (!newTopic || !newQuestion || !newAnswer || !newHint) {
             alert('All fields are required.');
             return;
         }
 
-        const res = await fetch(`${APIURL}/api/questions`, {
+        // Create new question via POST request
+        const res = await fetch(`${APIURL}/api/questions`, { // use fetch function 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+            body: JSON.stringify({ // Convert object JS to JSON string
                 topic: newTopic.trim(),
                 question: newQuestion.trim(),
                 answer: newAnswer.trim(),
@@ -45,6 +60,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
             }),
         });
 
+        // If successfully added, reset form and refresh question list
         if (res.ok) {
             resetForm();
             await fetchQuestions();
@@ -82,7 +98,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
         }
     };
 
-    // Fill the form for editing
+    // --- EDITING LOGIC ---
+    // When user clicks "Edit", populate form with question data and set editingId
     const startEditing = (q: Question) => {
         setEditingId(q.id!);
         setNewTopic(q.topic);
@@ -91,7 +108,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
         setNewAnswer(q.answer);
     };
 
-    // Reset form
+    // --- FORM RESET ---
+    // Clear form fields and reset editing state
     const resetForm = () => {
         setNewTopic('');
         setNewQuestion('');
@@ -100,13 +118,15 @@ export default function BuilderRoom({ onRefresh }: Props) {
         setEditingId(null);
     };
 
+    // --- RENDER ---
     return (
         <div>
             <h2>Builder Room</h2>
             <h3>Warning: No 2 questions in the &quot;Question&quot; column can be the same!</h3>
 
-            {/* Add / Edit form */}
+            {/* --- FORM SECTION (CREADTE/UPDATE) ---*/}
             <div className="mb-3 row">
+                {/*Topic field*/}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -116,6 +136,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
                         placeholder="Topic"
                     />
                 </div>
+
+                {/* Question field */}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -125,6 +147,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
                         placeholder="Question"
                     />
                 </div>
+
+                {/* Hint field */}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -134,6 +158,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
                         placeholder="Hint"
                     />
                 </div>
+
+                {/* Answer field */}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -145,6 +171,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
                 </div>
             </div>
 
+            {/* Action Buttons (Add vs Update mode)*/}
             <div className="mb-3">
                 {editingId ? (
                     <>
@@ -165,7 +192,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
                 )}
             </div>
 
-            {/* Display Table */}
+            {/* --- TABLE DISPLAY --- */}
             <table className="table table-bordered">
                 <thead className="table-light">
                     <tr>

@@ -1,45 +1,52 @@
-# OpenTelemetry Collector configuration file
+# otel-collector-config.yaml
+
 receivers:
   otlp:
     protocols:
-      grpc:
-      http:
+      grpc: # enable collector to receive telemetry via OTLP gRPC (default port 4317)
+      http: # enable collector to receive telemetry via OTLP HTTP (default port 4318)
 
 exporters:
   prometheus:
-    endpoint: "0.0.0.0:8889"
+    endpoint: "0.0.0.0:8889" # expose metrics endpoint for Prometheus to scrape
     const_labels:
-      label1: value1
+      label1: value1 # optional labels added to all metrics
 
-  logging:
+  logging: # print telemetry data to console/logs
 
   zipkin:
-    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+    # where the collector's exporter sends traces to Zipkin service
+    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans" # inside Docker network
     format: proto
 
   jaeger:
-    endpoint: jaegertracing:14250
+    endpoint: jaegertracing:14250 # gRPC endpoint of Jaeger to receive traces
     tls:
-      insecure: true
+      insecure: true # disable TLS, don't need security for now
 
 processors:
-  batch:
+  batch: # group telemetry data into batches before exporting
 
+# tools to check and debug collector
 extensions:
-  health_check:
+  health_check: # health endpoint (default port 13133) to check if collector is alive
   pprof:
-    endpoint: :1888
+    endpoint: :1888 # performance profiling (CPU, memory) of collector
   zpages:
-    endpoint: :55679
+    endpoint: :55679 # live debugging pages for tracing pipeline
 
+# main pipeline
 service:
   extensions: [pprof, zpages, health_check]
   pipelines:
+    # trace pipeline
     traces:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [logging, zipkin, jaeger]
+      receivers: [otlp] # receive traces from API (via OTLP)
+      processors: [batch] # batch traces before sending
+      exporters: [logging, zipkin, jaeger] # where traces are sent to
+
+    # metrics pipeline
     metrics:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [logging, prometheus]
+      receivers: [otlp] # receive metrics from API
+      processors: [batch] # batch metrics
+      exporters: [logging, prometheus] # where metrics are sent to
