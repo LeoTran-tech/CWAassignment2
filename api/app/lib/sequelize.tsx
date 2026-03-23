@@ -37,7 +37,7 @@ export class Question extends Model<InferAttributes<Question>, InferCreationAttr
 Question.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.INTEGER, // each question has a unique id
             autoIncrement: true,
             primaryKey: true,
         },
@@ -48,7 +48,7 @@ Question.init(
         question: {
             type: DataTypes.TEXT,
             allowNull: false,
-            unique: true,
+            unique: true,   // Prevent duplicate questions
         },
         hint: {
             type: DataTypes.TEXT,
