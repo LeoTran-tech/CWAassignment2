@@ -1,67 +1,117 @@
-## React Tabs App
+# Frontend – Escape Room & Code Generator Web App
 
-This project is a React + Next.js application that demonstrates a multi-feature web app with a navigation bar, tabs system, theme switching, and output code generation.
-It was built as part of an assignment to showcase component design, state management, and basic UI/UX features.
+This frontend is built with Next.js, React, and TypeScript as part of a web application that combines an interactive coding game, a tab-based code generator, and several supporting pages.
 
-### I. Features:
+It demonstrates modern frontend development practices including component-based architecture, state management with React hooks, local persistence, responsive navigation, theme switching, and integration with a backend API.
 
-1. Pages:
-- Tabs Page (Home)
-- About Page
-- Coding Races
-- Pre-lab questions
-- Escape Room
+## Features
 
-2. Themes:
-- Light Mode
-- Dark Mode
-- Solarized mode
-- Toggle with Theme Button
+### 1. Escape Room gameplay
+- Interactive object-based gameplay (question, hint, answer)
+- Timer-based challenge system
+- Win/lose end screens
+- Dynamic question selection
+- Integrated Builder Room for managing questions
 
-3. Hamburger Menu:
-- Includes a hamburger menu (CSS transform animation)
-- Expands/collapses navigation links
+### 2. Builder Room (CRUD UI)
+- Add, edit, and delete questions
+- Real-time updates via backend API
+- Table-based management interface
 
-4. Code generator:
-- Generate up to 15 tabs
-- Tabs can be renamed
-- Tab content can be edited and saved
-- Tabs persist in localStorage
-- Output button generates HTML code with inline CSS only
+### 3. Code Generator (Tabs System)
+- Create and manage up to 15 tabs
+- Edit and persist content using `localStorage`
+- Generate HTML output with inline CSS
 
-### II. GitHub Workflow
-1. Branches:
- - feature/cookies
- - feature/hamburger
- - feature/about
- - feature/header-footer
- - feature/output
- - fix-step-header
- - main branch
-.gitignore excludes node_modules
+### 4. UI & UX
+- Light, Dark, and Solarized themes
+- Responsive navigation with hamburger menu
+- Reusable component-based design
 
-2. Technologies Used:
-- Next.js 13+ (App Router)
-- React 18
+### 5. Serverless Demo
+As part of the cloud deployment exploration, the frontend was also exported as a static site and hosted on AWS S3.
+
+Since S3 cannot execute backend logic, a lightweight AWS Lambda function was introduced to provide dynamic data via HTTP.
+
+This demonstrates:
+- S3 for static frontend hosting
+- Lambda for serverless backend functionality
+
+## Tech Stack
+
+- Next.js (App Router)
+- React
 - TypeScript
-- Bootstrap 5 (for UI layout & styling)
-- LocalStorage (for tab saving)
-- CSS Modules (for Hamburger Menu)
+- Bootstrap 5
+- CSS Modules
+- LocalStorage
+- Fetch API
 
-3. Installation & Setup:
+## Request Flow
 
-Clone the repo:
-- git clone https://github.com/your-username/your-repo-name.git
-- cd your-repo-name
+```text
+User → Frontend → API → Database → Response → UI
+```
 
-4. Install dependencies:
-- npm install
-- Run the development server:
-- npm run dev
+## Backend Integration
 
-Then open http://localhost:3000
- in your browser.
+The frontend communicates with the backend API for question management and gameplay data.
+API Endpoints:
+- `GET /api/questions`
+- `POST /api/questions`
+- `PATCH /api/questions/:id`
+- `DELETE /api/questions/:id`
 
-Author
 
-Leo Tran
+## Assets
+
+Static assets are stored in public/, including:
+
+- Escape Room background image
+- Interactive object icons (SVG)
+- Supporting UI assets
+
+
+## Local Development
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Start the development server
+
+```bash
+npm run dev
+```
+
+### 3. Open in browser
+
+```bash
+http://localhost:3000
+```
+
+## Build
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To run the production build locally:
+
+```bash
+npm run start
+```
+This frontend also includes a Dockerfile so it can run as part of the full system using Docker Compose.
+
+In the full project setup, the frontend runs in its own container and communicates with the backend container over the Docker network.
+
+## Deployment Note
+
+This frontend can be:
+
+deployed via Docker on AWS EC2 (full-stack setup)
+exported and hosted on AWS S3 (static deployment)

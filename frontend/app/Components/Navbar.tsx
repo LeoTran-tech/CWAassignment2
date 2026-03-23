@@ -24,7 +24,7 @@ export default function Navbar() {
         <ul className="navbar-nav d-flex flex-row">
           {[
             { href: '/', label: 'Tabs' },
-            { href: '/pre-lab-questions', label: 'Pre-lab Questions' },
+            { href: '/lambda-function-demo', label: 'Lambda function demo' },
             { href: '/escape-room', label: 'Escape Room' },
             { href: '/coding-races', label: 'Coding Races' },
             { href: '/about', label: 'About' },
