@@ -1,29 +1,43 @@
 // assi2/api/app/lib/sequelize.tsx
-import { Sequelize, DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+
+// Sequelize is an Object-Relational Mapping library.
+import {
+    Sequelize,
+    DataTypes,
+    Model,
+    InferAttributes,
+    InferCreationAttributes,
+    CreationOptional
+} from 'sequelize';
+
 import path from 'path';
 import sqlite3 from 'sqlite3';
 
+// "sequelize" manage communication between Question and the DB. It
+// translates operations(e.g. findAll()) to a SQL query.
 export const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    dialectModule: sqlite3,
-    storage: path.resolve('./sqlite/dev.sqlite'),
+    dialect: 'sqlite', // db type
+    dialectModule: sqlite3, // path to the sqlite file
+    storage: path.resolve('./sqlite/dev.sqlite'), // where the sqlite file is located
     logging: false,
 });
 
+// Question is a subclass of Model
 export class Question extends Model<InferAttributes<Question>, InferCreationAttributes<Question>> {
-    declare id: CreationOptional<number>;
+    declare id: CreationOptional<number>; // user doesn't need to provide an id
     declare topic: string;
     declare question: string;
     declare hint: string;
     declare answer: string;
-    declare createdAt: CreationOptional<Date>;
-    declare updatedAt: CreationOptional<Date>;
+    declare createdAt: CreationOptional<Date>; // user doesn't need to provide this
+    declare updatedAt: CreationOptional<Date>; // user doesn't need to provide this
 }
 
+// Create the Questions table
 Question.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.INTEGER, // each question has a unique id
             autoIncrement: true,
             primaryKey: true,
         },
@@ -34,7 +48,7 @@ Question.init(
         question: {
             type: DataTypes.TEXT,
             allowNull: false,
-            unique: true,
+            unique: true,   // Prevent duplicate questions
         },
         hint: {
             type: DataTypes.TEXT,
@@ -44,7 +58,6 @@ Question.init(
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        // 👇 Add these two fields for TS type checking
         createdAt: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -57,18 +70,18 @@ Question.init(
     {
         sequelize,
         modelName: 'Question',
-        tableName: 'questions',
+        tableName: 'Questions',
         timestamps: true,
     }
 );
 
-// ✅ Ensure DB sync runs only once
-let isSynced = false;
+// Ensure DB sync runs only once
+let isReady = false;
 
-export async function initDB() {
-    if (!isSynced) {
-        await sequelize.sync({ alter: true });
-        console.log('✅ SQLite synced successfully');
-        isSynced = true;
+export async function ensureConnection() {
+    if (!isReady) {
+        await sequelize.authenticate();
+        console.log('SQLite synced successfully');
+        isReady = true;
     }
 }

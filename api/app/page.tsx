@@ -1,21 +1,28 @@
+// assi2/api/app/page.tsx
 'use client';
+
+// This page shows API documentation for Escape Room API, and the list
+// of monitoring/observability dashboard such as Jaeger, Zipkin, Prometheus,
+// OpenTelemetry
 
 import React, { useEffect, useState } from 'react';
 
 const getPathUrl = () => {
+  // if currently on the browser side (client side)
   if (typeof window !== 'undefined') {
-    const url = new URL(window.location.href);
+    const url = new URL(window.location.href); // get current URL
     return `${url.protocol}//${url.hostname}`; // remove port for cleaner base URL
   }
   return '';
 };
 
-const ApiDocumentation: React.FC = () => {
+const ApiDocumentation = () => {
   const [baseUrl, setBaseUrl] = useState('');
 
+  // use useEffect to ensure that the code runs on the client side
   useEffect(() => {
     setBaseUrl(getPathUrl());
-  }, []);
+  }, []); // dependency array is empty because run only once when component mounts
 
   return (
     <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif', lineHeight: 1.6 }}>

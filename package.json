@@ -5,7 +5,7 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
+    "@playwright/test": "^1.58.2",
     "@types/node": "^24.9.1",
     "@types/sequelize": "^4.28.20",
     "sequelize-cli": "^6.6.3"

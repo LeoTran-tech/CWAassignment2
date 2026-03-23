@@ -1,81 +1,82 @@
 # docker-compose.yml
 services:
   frontend:
-    build: ./frontend
+    build: ./frontend # build image from Dockerfile
     ports:
-      - "80:3000"              # expose web app on http://<EC2-IP>
+      - "80:3000" # expose on port 80, mapped to container's port 3000
     depends_on:
-      - api
+      - api # start api container before frontend container
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=development # set environment mode to development
     volumes:
-      - ./frontend:/app        # allow you to edit files live
-      - /app/node_modules      # keep node_modules safe inside container
+      - ./frontend:/app # mount frontend source code into the container for live updates
+      - /app/node_modules # prevent overwriting node_modules with local files
     command: npm run dev
 
   api:
     build: ./api
     ports:
-      - "4080:3000"            # backend API port
+      - "4080:3000" # expose on port 4080, mapped to container's port 3000
     depends_on:
-      - sqlite
+      - sqlite # start sqlite container before api container
     environment:
       - NODE_ENV=development
     volumes:
-      - ./api:/app
-      - sqlite_data:/app/sqlite
-    command: sh -c "npx sequelize-cli db:migrate && npm run dev"
+      - ./api:/app # mount API code to container for live updates
+      - /app/node_modules # prevent overwriting node_modules with local files
+      - sqlite_data:/app/sqlite # let api container access the volume, which stores the DB
+    command: sh -c "npx sequelize-cli db:migrate && npm run dev" # migrate DB first
 
-  sqlite:
-    image: alpine
-    container_name: sqlite-volume-holder
-    volumes:
-      - sqlite_data:/sqlite
-    command: ["sh", "-c", "while true; do sleep 1000; done"]
-
-  # Jaeger
+  # Make separate containers for observability tools as they are independent services
+  # Jaeger: monitor request trace/ request flow across services
   jaegertracing:
-    image: jaegertracing/jaeger:latest
-    restart: always
+    image: jaegertracing/jaeger:latest # Use official Jaeger image
+    restart: always # Restart container if it crashes -> keep service alive
     ports:
-      - "16686:16686"
-      - "14268"
-      - "14250"
+      - "16686:16686" # expose Jaeger UI for browser access
+      - "14268" # for Jaeger to receive HTTP trace data
+      - "14250" # for Jaeger to receive gRPC trace data
 
-  # Zipkin
+  # Zipkin: trace visualization tool for analyzing latency and service dependencies
   zipkin-all-in-one:
-    image: openzipkin/zipkin:latest
+    image: openzipkin/zipkin:latest # Use official Zipkin image
     restart: always
     ports:
-      - "9411:9411"
+      - "9411:9411" # expose Zipkin UI for browser access
 
-  # Collector
+  # OTEL Collector: central pipeline
   otel-collector:
-    image: otel/opentelemetry-collector:0.67.0
+    image: otel/opentelemetry-collector:0.67.0 # Official OTEL collector image
     restart: always
-    command: ["--config=/etc/otel-collector-config.yaml"]
-    volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    ports:
-      - "1888:1888"   # pprof extension
-      - "8888:8888"   # Prometheus metrics exposed by the collector
-      - "8889:8889"   # Prometheus exporter metrics
-      - "13133:13133" # health_check extension
-      - "4317:4317"   # OTLP gRPC receiver
-      - "4318:4318"   # OTLP HTTP receiver
-      - "55679:55679" # zpages extension
-    depends_on:
-      - jaegertracing
-      - zipkin-all-in-one
 
+    # Load and follow custom config file
+    command: ["--config=/etc/otel-collector-config.yaml"]
+
+    volumes:
+      # mount config from host to container for container to "see" the config
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports: # service <-> service, e.g. Prometheus scrape data
+      - "1888:1888" # pprof extension for user to manage performance of collector
+      - "8888:8888" # Prometheus metrics exposed by the collector, 8888 is built-in endpoint
+      - "8889:8889" # Prometheus exporter metrics from collector
+      - "13133:13133" # default endpoint for collector's health_check extension
+      - "4317:4317" # default port for collector's OTLP gRPC receiver
+      - "4318:4318" # default port for collector's OTLP HTTP receiver
+      - "55679:55679" # zpages extension for live debugging collector
+    depends_on:
+      - jaegertracing # Start jaegertracing first
+      - zipkin-all-in-one # Start zipkin-all-in-one first
+
+  # Prometheus: metrics collection & monitoring (CPU, memory, request rate, etc.)
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:latest
+    image: prom/prometheus:latest # use official Prometheus image
     restart: always
     volumes:
+      # mount config from host to container for container to "see" the config
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"
+      - "9090:9090" # expose Prometheus UI (default port 9090) for browser access
 
 volumes:
-  sqlite_data:
+  sqlite_data: # declare named volume used to persist SQLite data

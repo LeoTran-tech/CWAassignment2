@@ -14,13 +14,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       question: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       hint: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       answer: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

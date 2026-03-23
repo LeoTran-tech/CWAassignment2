@@ -1,43 +1,58 @@
 // assi2/frontend/app/Components/escape-room/BuilderRoom.tsx
+
+// The BuilderRoom is shown when the user clicks "Open Builder Room" button in
+// the Escape Room tab. It allows users to create, read, update, and delete questions
+// that will be used in the escape room game. It interacts with the backend API.
+
 'use client';
 import { useState, useEffect } from 'react';
 import { Question } from './types';
 
-const APIURL = 'http://ec2-54-237-223-193.compute-1.amazonaws.com:4080';
+const APIURL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com:4080';
 
 interface Props {
     onRefresh?: () => void;
 }
 
 export default function BuilderRoom({ onRefresh }: Props) {
+    // --- STATE VARIABLES ---
+
+    // List of questions fetched from the backend
     const [questions, setQuestions] = useState<Question[]>([]);
+    // track which question is being edited
+
     const [editingId, setEditingId] = useState<number | null>(null);
     const [newTopic, setNewTopic] = useState('');
     const [newQuestion, setNewQuestion] = useState('');
     const [newAnswer, setNewAnswer] = useState('');
     const [newHint, setNewHint] = useState('');
 
-    // ✅ Fetch all questions
+    // --- FETCH QUESTIONS ---
+    // Fetch all questions from backend api
     const fetchQuestions = async () => {
         const res = await fetch(`${APIURL}/api/questions`);
         if (res.ok) setQuestions(await res.json());
     };
 
+    // whenever user enters the Builder Room, fetch the questions
     useEffect(() => {
         fetchQuestions();
     }, []);
 
-    // ✅ Add new question
+    // --- CRUD OPERATIONS ---
+    // Add new question
     const handleAdd = async () => {
+        // Prevent adding if any field is empty
         if (!newTopic || !newQuestion || !newAnswer || !newHint) {
             alert('All fields are required.');
             return;
         }
 
-        const res = await fetch(`${APIURL}/api/questions`, {
+        // Create new question via POST request
+        const res = await fetch(`${APIURL}/api/questions`, { // use fetch function 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+            body: JSON.stringify({ // Convert object JS to JSON string
                 topic: newTopic.trim(),
                 question: newQuestion.trim(),
                 answer: newAnswer.trim(),
@@ -45,13 +60,14 @@ export default function BuilderRoom({ onRefresh }: Props) {
             }),
         });
 
+        // If successfully added, reset form and refresh question list
         if (res.ok) {
             resetForm();
             await fetchQuestions();
         }
     };
 
-    // ✅ Update question
+    // Update question
     const handleUpdate = async (id: number) => {
         const res = await fetch(`${APIURL}/api/questions/${id}`, {
             method: 'PATCH',
@@ -71,7 +87,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
         }
     };
 
-    // ✅ Delete question
+    // Delete question
     const handleDelete = async (id: number) => {
         const res = await fetch(`${APIURL}/api/questions/${id}`, {
             method: 'DELETE',
@@ -82,7 +98,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
         }
     };
 
-    // ✅ Fill the form for editing
+    // --- EDITING LOGIC ---
+    // When user clicks "Edit", populate form with question data and set editingId
     const startEditing = (q: Question) => {
         setEditingId(q.id!);
         setNewTopic(q.topic);
@@ -91,7 +108,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
         setNewAnswer(q.answer);
     };
 
-    // ✅ Reset form
+    // --- FORM RESET ---
+    // Clear form fields and reset editing state
     const resetForm = () => {
         setNewTopic('');
         setNewQuestion('');
@@ -100,13 +118,15 @@ export default function BuilderRoom({ onRefresh }: Props) {
         setEditingId(null);
     };
 
+    // --- RENDER ---
     return (
         <div>
             <h2>Builder Room</h2>
             <h3>Warning: No 2 questions in the &quot;Question&quot; column can be the same!</h3>
 
-            {/* Add / Edit form */}
+            {/* --- FORM SECTION (CREADTE/UPDATE) ---*/}
             <div className="mb-3 row">
+                {/*Topic field*/}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -116,6 +136,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
                         placeholder="Topic"
                     />
                 </div>
+
+                {/* Question field */}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -125,6 +147,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
                         placeholder="Question"
                     />
                 </div>
+
+                {/* Hint field */}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -134,6 +158,8 @@ export default function BuilderRoom({ onRefresh }: Props) {
                         placeholder="Hint"
                     />
                 </div>
+
+                {/* Answer field */}
                 <div className="col-md-3">
                     <input
                         type="text"
@@ -145,6 +171,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
                 </div>
             </div>
 
+            {/* Action Buttons (Add vs Update mode)*/}
             <div className="mb-3">
                 {editingId ? (
                     <>
@@ -152,7 +179,7 @@ export default function BuilderRoom({ onRefresh }: Props) {
                             className="btn btn-warning me-2"
                             onClick={() => handleUpdate(editingId)}
                         >
-                            ✏️ Update
+                            Update
                         </button>
                         <button className="btn btn-secondary" onClick={resetForm}>
                             Cancel
@@ -160,12 +187,12 @@ export default function BuilderRoom({ onRefresh }: Props) {
                     </>
                 ) : (
                     <button className="btn btn-success" onClick={handleAdd}>
-                        ➕ Add Question
+                        Add Question
                     </button>
                 )}
             </div>
 
-            {/* Display Table */}
+            {/* --- TABLE DISPLAY --- */}
             <table className="table table-bordered">
                 <thead className="table-light">
                     <tr>
@@ -191,13 +218,13 @@ export default function BuilderRoom({ onRefresh }: Props) {
                                         className="btn btn-sm btn-outline-primary me-2"
                                         onClick={() => startEditing(q)}
                                     >
-                                        ✏️ Edit
+                                        Edit
                                     </button>
                                     <button
                                         className="btn btn-sm btn-outline-danger"
                                         onClick={() => handleDelete(q.id!)}
                                     >
-                                        🗑️ Delete
+                                        Delete
                                     </button>
                                 </td>
                             </tr>

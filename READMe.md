@@ -1,241 +1,162 @@
-# Escape Room Web Application – Cloud Deployment & Observability
+# Escape Room Web Application – Cloud, Observability & Testing
 
-Author: Anh Quan (Leo) Tran
-Course: CSE3CWA – Web Application Development
-Assignment: Escape Room Application with Cloud Deployment, Observability & Testing
 
-## 📌 Project Overview
+## Overview
 
-This project is a full-stack Escape Room web application designed to manage and play coding challenges in an interactive, game-based environment.
+This project is a full-stack web application that allows users to:
 
-The system demonstrates modern web application architecture, cloud deployment, observability, and automated testing, aligning with real-world industry practices.
+- play coding challenges in an interactive “Escape Room” environment  
+- create, edit, and manage questions through a builder interface  
 
-The application includes:
+The system demonstrates modern software engineering practices, including:
 
-* A Next.js frontend for gameplay and question management
-* A Next.js + Sequelize backend API with persistent storage
-* Cloud deployment on AWS EC2
-* Static website hosting using AWS S3
-* Serverless dynamic content using AWS Lambda
-* Full observability stack (OpenTelemetry, Jaeger, Zipkin, Prometheus)
-* Automated API & UI testing using Playwright
+- full-stack development
+- containerised deployment
+- cloud infrastructure (AWS)
+- observability and monitoring
+- automated testing
 
-## 🏗️ System Architecture
+## Key Features
 
-### Core Components
+- Interactive Escape Room gameplay with timer and dynamic UI  
+- Builder Room for CRUD question management  
+- Cloud deployment on AWS EC2  
+- Static hosting using AWS S3  
+- Serverless dynamic HTML generation using AWS Lambda  
+- Full observability stack (OpenTelemetry, Jaeger, Zipkin, Prometheus)  
+- End-to-end and API testing using Playwright  
 
-* Frontend: Next.js (App Router)
-* Backend API: Next.js API routes + Sequelize ORM
-* Database: SQLite (Docker volume)
-* Containerisation: Docker & Docker Compose
-* Cloud Platform: AWS EC2 (Free Tier)
-* Static Hosting: AWS S3 (Static Website Hosting)
-* Serverless: AWS Lambda
-* Monitoring: OpenTelemetry Collector, Jaeger, Zipkin, Prometheus
-* Testing: Playwright (API & UI tests)
+## Tech Stack
 
-All services are orchestrated using Docker Compose on a single EC2 instance.
+- Frontend: Next.js (App Router), React, TypeScript 
+- Backend: Next.js API Routes + Sequelize ORM
+- Database: SQLite
+- Containerisation: Docker & Docker Compose
+- Cloud: AWS EC2, S3, Lambda
+- Static Hosting: AWS S3
+- Serverless: AWS Lambda
+- Observability:
+  - OpenTelemetry
+  - Jaeger (tracing)
+  - Zipkin (tracing)
+  - Prometheus (metrics)
+- Testing: Playwright (API + UI)
 
-## ☁️ Cloud Deployment (AWS EC2)
+## System architecture
 
-The entire application stack is deployed on an AWS EC2 instance using Docker Compose.
+- a Next.js frontend for user interaction and gameplay  
+- a backend API layer for business logic and data handling
+- a SQLite database accessed via Sequelize ORM  
+- a containerised environment orchestrated with Docker Compose  
+- a cloud deployment layer using AWS services  
+- an observability stack for tracing and monitoring 
 
-### Public Endpoints
+## Request Flow
 
-* Frontend: `http://<EC2-IP>/`
-* Backend API: `http://<EC2-IP>:4080/`
-
-The EC2 instance runs:
-
-* Frontend container
-* Backend API container
-* SQLite volume container
-* OpenTelemetry Collector
-* Jaeger
-* Zipkin
-* Prometheus
-
-## 🌐 Static Website Hosting (AWS S3)
-
-A production build of the frontend was generated using:
-
-```bash
-npm run build
+```text
+User interaction (frontend)
+        ↓
+HTTP request sent to backend
+        ↓
+Next.js API route handles request
+        ↓
+Sequelize queries SQLite database
+        ↓
+Response returned to frontend
+        ↓
+UI updates dynamically
 ```
 
-The static output was uploaded to an AWS S3 bucket with:
+## Deployment
 
-* Static website hosting enabled
-* Public read access via bucket policy
-* `index.html` configured as the entry point
+### AWS EC2
 
-This satisfies the requirement for static website deployment in the cloud.
+Runs the full containerised system using Docker Compose, including:
 
-## 🔁 AWS Lambda – Dynamic HTML Generation
+- frontend service
+- backend API
+- observability stack
 
-An AWS Lambda function was implemented to demonstrate dynamic page generation.
+### AWS S3
 
-The Lambda function:
+Used for static hosting of the frontend.
 
-* Runs on Node.js (ES module runtime)
-* Dynamically generates HTML output based on request parameters
-* Can be invoked via API Gateway
+### AWS Lambda
 
-This fulfills the requirement:
+Used to generate dynamic HTML content, demonstrating serverless execution.
 
-> “Add a Lambda function that creates dynamic pages of your HTML output.”
+## Demo
 
+- Frontend (S3 static site): [<link>](http://quantran-cwa-frontend-demo-613150164134-ap-southeast-2-an.s3-website-ap-southeast-2.amazonaws.com/)
+- Lambda Function (dynamic HTML): [<link>](https://brj6ie7pn3lwq2fz6lhpuf6tpq0cwcdo.lambda-url.ap-southeast-2.on.aws/)
 
-## 📊 Observability & Monitoring
+## Screenshots
 
+### Escape Room Gameplay
+Interactive coding challenge with object-based mechanics.
+![escape-room](./screenshots/escape-room.png)
+
+### Builder Room (CRUD)
+Create, update, and manage questions through a UI.
+![builder-room](./screenshots/builder-room.png)
+
+### Distributed Tracing (Jaeger)
+End-to-end request tracing from API to database.
+![jaeger](./screenshots/jaeger.png)
+
+### Metrics Monitoring (Prometheus)
+System metrics and performance monitoring.
+![prometheus](./screenshots/prometheus.png)
+
+## Observability & Monitoring
 The backend API is fully instrumented using OpenTelemetry.
 
-### Observability Stack
-
-* OpenTelemetry SDK (Node.js)
-* OpenTelemetry Collector
-* Jaeger – Distributed trace visualisation
-* Zipkin – Trace dashboard
-* Prometheus – Metrics collection and querying
-
-### Service Identification
-
-All traces are exported with:
-
-```
-service.name = api-service
+```text
+Backend → OpenTelemetry SDK → OTEL Collector → Jaeger / Zipkin / Prometheus
 ```
 
-This allows easy filtering in Jaeger and Zipkin.
+This enables:
 
-## 🔌 Deployed Services & Ports
+- distributed tracing of API requests
+- monitoring of latency and system behaviour
+- visibility into database interactions
 
-The following services are exposed on the EC2 instance:
 
-| Service           | Port  | Description                    |
-| ----------------- | ----- | ------------------------------ |
-| jaegertracing     | 16686 | Jaeger Web UI                  |
-| jaegertracing     | 14268 | Jaeger HTTP Receiver           |
-| jaegertracing     | 14250 | Jaeger gRPC Receiver           |
-| zipkin-all-in-one | 9411  | Zipkin UI & HTTP API           |
-| otel-collector    | 1888  | pprof Extension                |
-| otel-collector    | 8888  | Prometheus Metrics (Collector) |
-| otel-collector    | 8889  | Prometheus Exporter Metrics    |
-| otel-collector    | 13133 | Health Check                   |
-| otel-collector    | 4317  | OTLP gRPC Receiver             |
-| otel-collector    | 4318  | OTLP HTTP Receiver             |
-| otel-collector    | 55679 | zPages Extension               |
-| prometheus        | 9090  | Prometheus UI & API            |
-| next.js           | 3000  | Next.js Development Server     |
-| backend api       | 4080  | REST API Service               |
-
-## 📈 Monitoring Dashboards
-
-| Tool         | URL                            |
-| ------------ | ------------------------------ |
-| Frontend     | `http://<EC2-IP>/`             |
-| Backend API  | `http://<EC2-IP>:4080/`        |
-| Jaeger       | `http://<EC2-IP>:16686/`       |
-| Zipkin       | `http://<EC2-IP>:9411/`        |
-| Prometheus   | `http://<EC2-IP>:9090/`        |
-| OTEL Metrics | `http://<EC2-IP>:8888/metrics` |
-
-Traces such as `GET /api/questions` and database interactions are visible in Jaeger and Zipkin.
-
-## 🔌 API Documentation
-
-### Base URL
-
-```
-http://<EC2-IP>:4080/api/questions
-```
-
-### Endpoints
-
-#### GET – Fetch all questions
-
-```bash
-curl -X GET http://<EC2-IP>:4080/api/questions
-```
-
-#### POST – Create a question
-
-```bash
-curl -X POST http://<EC2-IP>:4080/api/questions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "topic": "Python",
-    "question": "What is a decorator?",
-    "hint": "It modifies another function",
-    "answer": "A function that wraps another function"
-  }'
-```
-
-#### PATCH – Update a question
-
-```bash
-curl -X PATCH http://<EC2-IP>:4080/api/questions/1 \
-  -H "Content-Type: application/json" \
-  -d '{"hint":"Updated hint"}'
-```
-
-#### DELETE – Remove a question
-
-```bash
-curl -X DELETE http://<EC2-IP>:4080/api/questions/1
-```
-
-Duplicate questions return:
-
-```json
-{ "error": "Duplicate question not allowed" }
-```
-
-with HTTP status 409 Conflict.
-
-## 🧪 Automated Testing (Playwright)
-
+## Testing
 Automated tests were implemented using Playwright.
 
-### Test Coverage
+Test Coverage
+- REST API tests (GET, POST, PATCH, DELETE)
+- Duplicate-safe logic validation
+- UI workflow test (Builder Room: add, edit, delete question)
 
-* ✅ REST API tests (GET, POST, PATCH, DELETE)
-* ✅ Duplicate-safe logic validation
-* ✅ UI workflow test (Builder Room: add, edit, delete question)
-
-### Run tests locally or in CI
-
-```bash
+Run tests locally or in CI
+``` bash
 npx playwright test
 ```
 
 Tests are also executed in GitHub Actions CI.
 
-## 📦 Docker Usage
-
-### Build containers
-
-```bash
-docker-compose build --no-cache
-```
-
-### Run application
-
-```bash
+## Docker Usage
+Run the full system locally:
+``` bash
+docker-compose build
 docker-compose up
 ```
 
-### Stop containers
-
-```bash
+Stop services:
+``` bash
 docker-compose down
 ```
 
-## ⚠️ AWS Free Tier Cost Notice
+## Project Structure
+- frontend/ – Next.js frontend application
+- api/ – backend API and database layer
+- tests/ – Playwright API and UI tests
+- docker-compose.yml – service orchestration
+- otel-collector-config.yaml – telemetry configuration
+- prometheus.yaml – metrics configuration
 
-This project is deployed using an AWS Free Tier EC2 instance with limited credits.
+Author
 
-As a result:
-
-* The EC2 instance may be stopped after marking
-* Public URLs may become unavailable in the future
+Anh Quan (Leo) Tran

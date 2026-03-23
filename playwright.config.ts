@@ -1,3 +1,4 @@
+// assi2/playwright.config.ts
 import { defineConfig, devices } from '@playwright/test';
 
 /**

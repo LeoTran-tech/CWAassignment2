@@ -1,25 +1,28 @@
 // assi2/tests/builderroom.spec.ts
+
+// This file tests the UI when user interact with the tabs and code generator in the main page.
+
 import { test, expect } from '@playwright/test';
 
 // Deployed frontend URL
-const FRONTEND_URL = 'http://ec2-54-237-223-193.compute-1.amazonaws.com/escape-room';
+const FRONTEND_URL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com/escape-room';
 
 test.skip(({ browserName }) => browserName === 'webkit', 'WebKit not supported on this host');
 
 test.describe('Escape Room - Builder Room workflow', () => {
     test('Add, Edit, and Delete a question', async ({ page }) => {
-        // Step 1️⃣ — Visit the Escape Room page
+        // Step 1 — Visit the Escape Room page
         await page.goto(FRONTEND_URL);
         await page.waitForLoadState('networkidle');
 
-        // Step 2️⃣ — Ensure Builder Room is visible
+        // Step 2 — Ensure Builder Room is visible
         const toggleButton = page.locator(
             'button:has-text("Open Builder Room"), button:has-text("Hide Builder Room")'
         );
         if (await toggleButton.isVisible()) await toggleButton.click();
         await expect(page.locator('h2')).toContainText('Builder Room');
 
-        // Step 3️⃣ — Fill in new question details
+        // Step 3 — Fill in new question details
         const topic = 'Playwright Test Topic';
         const question = 'What does Playwright automate?';
         const hint = 'Browser automation framework';
@@ -30,7 +33,7 @@ test.describe('Escape Room - Builder Room workflow', () => {
         await page.fill('input[placeholder="Hint"]', hint);
         await page.fill('input[placeholder="Answer"]', answer);
 
-        // Step 4️⃣ — Click "Add Question"
+        // Step 4 — Click "Add Question"
         await page.click('button:has-text("Add Question")');
 
         // Wait until new row appears
@@ -38,7 +41,7 @@ test.describe('Escape Room - Builder Room workflow', () => {
         await expect(row).toBeVisible();
         await expect(row).toContainText(question);
 
-        // Step 5️⃣ — Click "Edit" and update hint
+        // Step 5 — Click "Edit" and update hint
         await row.locator('button:has-text("Edit")').click();
         await expect(page.locator('button:has-text("Update")')).toBeVisible();
 
@@ -49,7 +52,7 @@ test.describe('Escape Room - Builder Room workflow', () => {
         // Verify updated hint appears
         await expect(page.locator('table')).toContainText(updatedHint);
 
-        // Step 6️⃣ — Delete the row and confirm disappearance
+        // Step 6 — Delete the row and confirm disappearance
         await row.locator('button:has-text("Delete")').click();
 
         // Wait for table to refresh and confirm removal
