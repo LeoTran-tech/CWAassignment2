@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { Question } from './types';
 
-const APIURL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com:4080';
+const APIURL = 'http://ec2-16-176-227-155.ap-southeast-2.compute.amazonaws.com:4080';
 
 interface Props {
     onRefresh?: () => void;
