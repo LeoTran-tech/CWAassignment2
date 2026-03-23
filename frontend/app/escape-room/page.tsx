@@ -14,7 +14,7 @@ import GamePanel from '../Components/escape-room/GamePanel';
 import OverlayEndScreen from '../Components/escape-room/OverlayEndScreen';
 import { Question, ObjectItem } from '../Components/escape-room/types';
 
-const APIURL = 'http://ec2-3-27-207-178.ap-southeast-2.compute.amazonaws.com:4080';
+const APIURL = 'http://ec2-16-176-227-155.ap-southeast-2.compute.amazonaws.com:4080';
 
 export default function EscapeRoom() {
 
