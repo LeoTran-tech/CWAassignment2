@@ -4,7 +4,7 @@
 
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = 'http://ec2-16-176-227-155.ap-southeast-2.compute.amazonaws.com:4080/api/questions';
+const BASE_URL = 'http://ec2-13-239-184-83.ap-southeast-2.compute.amazonaws.com:4080/api/questions';
 
 // Skip WebKit for this environment
 // test.skip(({ browserName }) => browserName === 'webkit', 'WebKit not supported on this host');

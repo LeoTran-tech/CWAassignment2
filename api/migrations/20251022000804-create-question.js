@@ -1,4 +1,9 @@
 // assi2/api/migrations/20251022000804-create-question.js
+
+// This file was created using
+// npx sequelize-cli migration:generate --name create-question
+
+
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
