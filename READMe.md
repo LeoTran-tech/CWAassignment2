@@ -87,8 +87,8 @@ Used to generate dynamic HTML content, demonstrating serverless execution.
 
 ## Demo
 
-- Frontend (S3 static site): [<link>](http://quantran-cwa-frontend-demo-613150164134-ap-southeast-2-an.s3-website-ap-southeast-2.amazonaws.com/)
-- Lambda Function (dynamic HTML): [<link>](https://brj6ie7pn3lwq2fz6lhpuf6tpq0cwcdo.lambda-url.ap-southeast-2.on.aws/)
+- Frontend (S3 static site): [View Live Site](http://quantran-cwa-frontend-demo-613150164134-ap-southeast-2-an.s3-website-ap-southeast-2.amazonaws.com/)
+- Lambda Function (dynamic HTML): [Invoke Lambda](https://brj6ie7pn3lwq2fz6lhpuf6tpq0cwcdo.lambda-url.ap-southeast-2.on.aws/)
 
 ## Screenshots
 
